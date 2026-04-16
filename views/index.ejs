@@ -5,41 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WARP3 Ladeabrechnung</title>
     <style>
+        :root{--primary:#1a56db;--primary-hover:#1e40af;--success:#059669;--success-hover:#047857;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-300:#d1d5db;--gray-500:#6b7280;--gray-600:#4b5563;--gray-700:#374151;--gray-800:#1f2937;--gray-900:#111827;--red-50:#fef2f2;--red-700:#b91c1c;--radius:6px;--shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06)}
         *{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f5f5f5;color:#333;padding:20px}
-        .container{max-width:1100px;margin:0 auto}
-        h1{margin-bottom:20px;font-size:1.5em}
-        .filter-bar{background:#fff;padding:16px 20px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.1);margin-bottom:20px;display:flex;gap:16px;align-items:end;flex-wrap:wrap}
-        .filter-bar label{font-size:.85em;font-weight:600;display:block;margin-bottom:4px}
-        .filter-bar select{padding:6px 10px;border:1px solid #ccc;border-radius:4px;font-size:.9em}
-        .filter-bar button,.btn{padding:7px 18px;border:none;border-radius:4px;font-size:.9em;cursor:pointer;text-decoration:none;display:inline-block}
-        .btn-pdf{background:#16a34a;color:#fff}.btn-pdf:hover{background:#15803d}
-        .btn-grey{background:#666;color:#fff;padding:7px 14px}
-        .btn-dark{background:#888;color:#fff;padding:7px 14px}
-        .summary{background:#fff;padding:14px 20px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.1);margin-bottom:20px;display:flex;gap:30px;flex-wrap:wrap}
-        .stat .val{font-size:1.4em;font-weight:700}
-        .stat .lbl{font-size:.8em;color:#666}
-        table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-        th{background:#f8f8f8;text-align:left;padding:10px 12px;font-size:.8em;font-weight:600;border-bottom:2px solid #e5e5e5}
-        td{padding:8px 12px;font-size:.85em;border-bottom:1px solid #eee}
-        tr:hover td{background:#f0f7ff}
-        .error{background:#fef2f2;color:#b91c1c;padding:14px 20px;border-radius:8px;margin-bottom:20px}
-        .num{text-align:right;font-variant-numeric:tabular-nums}
-        .company-form{display:none;background:#fff;padding:14px 20px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.1);margin-bottom:20px;gap:12px;align-items:end;flex-wrap:wrap}
-        .company-form input{padding:6px 10px;border:1px solid #ccc;border-radius:4px;font-size:.9em}
-        .company-form label{font-size:.85em;font-weight:600;display:block;margin-bottom:4px}
+        body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--gray-100);color:var(--gray-900);font-size:14px;line-height:1.5}
+        .container{max-width:1200px;margin:0 auto;padding:24px}
+        .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--gray-200)}
+        .header h1{font-size:1.25rem;font-weight:600;color:var(--gray-800)}
+        .header-actions{display:flex;gap:8px}
+        .card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);box-shadow:var(--shadow)}
+        .filter-bar{padding:16px 20px;margin-bottom:16px;display:flex;gap:14px;align-items:end;flex-wrap:wrap}
+        .filter-bar .field label{display:block;font-size:12px;font-weight:500;color:var(--gray-500);margin-bottom:4px;text-transform:uppercase;letter-spacing:.03em}
+        .filter-bar select{padding:7px 10px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:13px;color:var(--gray-700);background:#fff;min-width:120px}
+        .filter-bar select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 2px rgba(26,86,219,.15)}
+        .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border:1px solid transparent;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s}
+        .btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-hover)}
+        .btn-success{background:var(--success);color:#fff}.btn-success:hover{background:var(--success-hover)}
+        .btn-outline{background:#fff;color:var(--gray-700);border-color:var(--gray-300)}.btn-outline:hover{background:var(--gray-50);border-color:var(--gray-400)}
+        .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-bottom:16px}
+        .stat-card{padding:16px 20px}
+        .stat-card .value{font-size:1.35rem;font-weight:700;color:var(--gray-900)}
+        .stat-card .label{font-size:12px;color:var(--gray-500);margin-top:2px}
+        table{width:100%;border-collapse:collapse}
+        .table-wrap{margin-bottom:24px;overflow-x:auto}
+        thead th{background:var(--gray-50);text-align:left;padding:10px 16px;font-size:12px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.03em;border-bottom:2px solid var(--gray-200)}
+        tbody td{padding:10px 16px;font-size:13px;color:var(--gray-700);border-bottom:1px solid var(--gray-100)}
+        tbody tr:hover td{background:var(--gray-50)}
+        .num{text-align:right;font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+        th.num{text-align:right}
+        .error{background:var(--red-50);color:var(--red-700);padding:14px 20px;border-radius:var(--radius);margin-bottom:16px;border:1px solid #fecaca}
+        .empty{padding:32px 20px;text-align:center;color:var(--gray-500)}
+        .company-panel{display:none;padding:16px 20px;margin-bottom:16px;gap:14px;align-items:end;flex-wrap:wrap}
+        .company-panel input{padding:7px 10px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:13px;color:var(--gray-700)}
+        .company-panel label{display:block;font-size:12px;font-weight:500;color:var(--gray-500);margin-bottom:4px;text-transform:uppercase;letter-spacing:.03em}
+        .divider{width:1px;height:28px;background:var(--gray-200);align-self:center}
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>⚡ WARP3 Ladeabrechnung</h1>
+    <div class="header">
+        <h1>WARP3 Ladeabrechnung</h1>
+        <div class="header-actions">
+            <a href="/refresh" class="btn btn-outline">Aktualisieren</a>
+            <button class="btn btn-outline" onclick="document.querySelector('.company-panel').style.display=document.querySelector('.company-panel').style.display==='flex'?'none':'flex'">Briefkopf</button>
+        </div>
+    </div>
 
     <% if (error) { %>
     <div class="error">Fehler beim Abrufen der Wallbox-Daten: <%= error %></div>
     <% } %>
 
-    <div class="filter-bar">
-        <div>
+    <form class="card company-panel" method="post" action="/company">
+        <div class="field">
+            <label>Firma</label>
+            <input name="name" value="<%= company.name %>" style="width:250px">
+        </div>
+        <div class="field">
+            <label>Strasse</label>
+            <input name="street" value="<%= company.street %>" style="width:200px">
+        </div>
+        <div class="field">
+            <label>PLZ / Ort</label>
+            <input name="city" value="<%= company.city %>" style="width:200px">
+        </div>
+        <button type="submit" class="btn btn-primary">Speichern</button>
+    </form>
+
+    <div class="card filter-bar">
+        <div class="field">
             <label>Benutzer</label>
             <select id="user" onchange="applyFilters()">
                 <option value="">Alle Benutzer</option>
@@ -48,7 +80,7 @@
                 <% }) %>
             </select>
         </div>
-        <div>
+        <div class="field">
             <label>Jahr</label>
             <select id="year" onchange="applyFilters()">
                 <option value="">Alle</option>
@@ -57,7 +89,7 @@
                 <% } %>
             </select>
         </div>
-        <div>
+        <div class="field">
             <label>Monat</label>
             <select id="month" onchange="applyFilters()">
                 <option value="">Alle</option>
@@ -66,37 +98,21 @@
                 <% }) %>
             </select>
         </div>
-        <button class="btn-pdf" onclick="downloadPdf()">PDF Export</button>
-        <a href="/refresh" class="btn btn-grey">↻ Aktualisieren</a>
-        <button class="btn btn-dark" onclick="document.querySelector('.company-form').style.display=document.querySelector('.company-form').style.display==='flex'?'none':'flex'">⚙ Briefkopf</button>
+        <div class="divider"></div>
+        <button type="button" class="btn btn-success" onclick="downloadPdf()">PDF exportieren</button>
     </div>
 
-    <form class="company-form" method="post" action="/company">
-        <div>
-            <label>Firma</label>
-            <input name="name" value="<%= company.name %>" style="width:250px">
-        </div>
-        <div>
-            <label>Straße</label>
-            <input name="street" value="<%= company.street %>" style="width:200px">
-        </div>
-        <div>
-            <label>PLZ / Ort</label>
-            <input name="city" value="<%= company.city %>" style="width:200px">
-        </div>
-        <button type="submit" style="background:#2563eb;color:#fff" class="btn">Speichern</button>
-    </form>
-
     <% if (rows.length > 0) { %>
-    <div class="summary">
-        <div class="stat"><div class="val"><%= rows.length %></div><div class="lbl">Ladevorgänge</div></div>
-        <div class="stat"><div class="val"><%= de(totalKwh, 3) %> kWh</div><div class="lbl">Gesamtenergie</div></div>
-        <div class="stat"><div class="val"><%= de(totalCost, 2) %> €</div><div class="lbl">Gesamtkosten</div></div>
+    <div class="stats">
+        <div class="card stat-card"><div class="value"><%= rows.length %></div><div class="label">Ladevorgänge</div></div>
+        <div class="card stat-card"><div class="value"><%= de(totalKwh, 3) %> kWh</div><div class="label">Gesamtenergie</div></div>
+        <div class="card stat-card"><div class="value"><%= de(totalCost, 2) %> EUR</div><div class="label">Gesamtkosten</div></div>
         <% Object.entries(prices).forEach(([name, price]) => { %>
-        <div class="stat"><div class="val"><%= de(price, 2) %> ct/kWh</div><div class="lbl"><%= name %></div></div>
+        <div class="card stat-card"><div class="value"><%= de(price, 2) %> ct/kWh</div><div class="label"><%= name %></div></div>
         <% }) %>
     </div>
 
+    <div class="card table-wrap">
     <table>
         <thead>
             <tr>
@@ -106,7 +122,7 @@
                 <th class="num">Zählerstand Start</th>
                 <th class="num">geladen (kWh)</th>
                 <th>Ladedauer</th>
-                <th class="num">Kosten (€)</th>
+                <th class="num">Kosten (EUR)</th>
             </tr>
         </thead>
         <tbody>
@@ -123,8 +139,9 @@
             <% }) %>
         </tbody>
     </table>
+    </div>
     <% } else if (!error) { %>
-    <p style="padding:20px;background:#fff;border-radius:8px;">Keine Ladevorgänge für die gewählten Filter gefunden.</p>
+    <div class="card"><p class="empty">Keine Ladevorgänge für die gewählten Filter gefunden.</p></div>
     <% } %>
 </div>
 
@@ -139,14 +156,8 @@ function buildParams() {
     else if (year) p.set('year', year);
     return p;
 }
-
-function applyFilters() {
-    window.location.href = '/?' + buildParams().toString();
-}
-
-function downloadPdf() {
-    window.location.href = '/pdf?' + buildParams().toString();
-}
+function applyFilters() { window.location.href = '/?' + buildParams().toString(); }
+function downloadPdf() { window.location.href = '/pdf?' + buildParams().toString(); }
 </script>
 </body>
 </html>
