@@ -3,11 +3,11 @@ FROM ${BUILD_FROM}
 
 RUN apk add --no-cache nodejs npm
 
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci --production
-COPY server.js simplepdf.js warp_logo.png ./
-COPY views/ views/
+COPY package.json package-lock.json /app/
+RUN cd /app && npm ci --production
+COPY server.js simplepdf.js warp_logo.png /app/
+COPY views/ /app/views/
 
 COPY rootfs /
-RUN chmod a+x /etc/s6-overlay/s6-rc.d/warp3/run
+
+WORKDIR /
