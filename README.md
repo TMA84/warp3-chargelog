@@ -1,8 +1,12 @@
+<p align="center">
+  <img src="logo.png" alt="WARP3 Chargelog" width="128">
+</p>
+
 # WARP3 Wallbox Ladeabrechnung
 
-Konsolidierte Ladeabrechnung für mehrere [Tinkerforge WARP3](https://www.warp-charger.com/) Wallboxen. Web-App mit Benutzer-/Monatsfilter und PDF-Export im Original-WARP3-Format.
+Home Assistant Add-on für konsolidierte Ladeabrechnung mehrerer [Tinkerforge WARP3](https://www.warp-charger.com/) Wallboxen.
 
-![Node.js](https://img.shields.io/badge/Node.js-18+-green) ![License](https://img.shields.io/badge/License-MIT-blue)
+![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Add--on-blue) ![License](https://img.shields.io/badge/License-MIT-blue)
 
 ## Features
 
@@ -14,24 +18,26 @@ Konsolidierte Ladeabrechnung für mehrere [Tinkerforge WARP3](https://www.warp-c
 - **Briefkopf/Firmenadresse** über die Weboberfläche konfigurierbar
 - **Daten-Caching** – schnelle Seitenaufrufe, manuelles Aktualisieren möglich
 
-## Screenshot
-
-Die Weboberfläche zeigt alle Ladevorgänge mit Startzeit, Benutzer, Wallbox, Zählerstand, geladene kWh, Ladedauer und Kosten.
-
 ## Installation
 
-```bash
-git clone https://github.com/<your-user>/warp3-charge-log.git
-cd warp3-charge-log
-cp config.yaml.example config.yaml
-npm install
-```
+1. In Home Assistant zu **Einstellungen → Add-ons → Add-on Store** navigieren
+2. Oben rechts auf **⋮ → Repositories** klicken
+3. Repository-URL hinzufügen:
+   ```
+   https://github.com/TMA84/warp3-chargelog
+   ```
+4. **WARP3 Ladeabrechnung** in der Liste finden und installieren
+5. Add-on starten
 
 ## Konfiguration
 
-`config.yaml` anpassen (optional – Wallboxen werden automatisch per mDNS gefunden):
+Die Wallboxen werden automatisch per mDNS im Netzwerk gefunden – in der Regel ist keine manuelle Konfiguration nötig.
+
+Optional können Wallboxen und Firmenadresse in der Datei `/addon_configs/warp3-chargelog/config.yaml` manuell angegeben werden:
 
 ```yaml
+port: 8099
+
 # Optional: Wallboxen manuell angeben
 wallboxes:
   - host: "warp3-AbCd"
@@ -42,24 +48,26 @@ company:
   name: "Musterfirma GmbH"
   street: "Musterstraße 1"
   city: "12345 Musterstadt"
-
-port: 3000
 ```
-
-## Starten
-
-```bash
-npm start
-```
-
-→ http://localhost:3000
 
 ## Verwendung
 
-1. **Filtern** – Benutzer, Jahr und Monat über die Dropdowns auswählen (wird sofort übernommen)
+Nach dem Start ist die Weboberfläche erreichbar unter:
+
+→ **http://\<home-assistant-ip\>:8099**
+
+1. **Filtern** – Benutzer, Jahr und Monat über die Dropdowns auswählen
 2. **PDF Export** – Erzeugt ein PDF im Original-WARP3-Format mit Logo, Briefkopf und Tabelle
 3. **⚙ Briefkopf** – Firmenadresse für den PDF-Header konfigurieren
 4. **↻ Aktualisieren** – Cache leeren und frische Daten von den Wallboxen holen
+
+## Unterstützte Architekturen
+
+| Architektur | Verfügbar |
+|---|---|
+| amd64 | ✅ |
+| aarch64 | ✅ |
+| armv7 | ✅ |
 
 ## Genutzte WARP3 API-Endpunkte
 
@@ -73,10 +81,10 @@ npm start
 ## Technische Details
 
 - **Node.js / Express** mit EJS-Templates
-- **Eigener PDF-Generator** (`simplepdf.js`) – kein pdfkit/puppeteer, minimaler Speicherverbrauch
+- **Eigener PDF-Generator** (`simplepdf.js`) – minimaler Speicherverbrauch
 - **mDNS-Discovery** via `bonjour-service` – findet WARP-Charger automatisch im LAN
-- **PDF-Layout** basiert auf den Original-Konstanten aus der [WARP-Firmware](https://github.com/Tinkerforge/esp32-firmware) (Spaltenoffsets, Margins, Font Size)
-- **Kostenberechnung** identisch zur Firmware: `Math.round(energy_kwh * price_ct)` in Cent, Summierung der gerundeten Werte
+- **Host-Netzwerk** – erforderlich für mDNS-Discovery
+- **Persistente Konfiguration** unter `/addon_configs/warp3-chargelog/`
 
 ## Lizenz
 
