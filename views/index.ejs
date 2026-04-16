@@ -15,7 +15,7 @@
         .card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);box-shadow:var(--shadow)}
         .filter-bar{padding:16px 20px;margin-bottom:16px;display:flex;gap:14px;align-items:end;flex-wrap:wrap}
         .filter-bar .field label{display:block;font-size:12px;font-weight:500;color:var(--gray-500);margin-bottom:4px;text-transform:uppercase;letter-spacing:.03em}
-        .filter-bar select{padding:7px 10px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:13px;color:var(--gray-700);background:#fff;min-width:120px}
+        .filter-bar select,.filter-bar input[type="date"]{padding:7px 10px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:13px;color:var(--gray-700);background:#fff;min-width:120px}
         .filter-bar select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 2px rgba(26,86,219,.15)}
         .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border:1px solid transparent;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s}
         .btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-hover)}
@@ -99,6 +99,15 @@
             </select>
         </div>
         <div class="divider"></div>
+        <div class="field">
+            <label>Von</label>
+            <input type="date" id="from" value="<%= selFrom %>" onchange="applyFilters()">
+        </div>
+        <div class="field">
+            <label>Bis</label>
+            <input type="date" id="to" value="<%= selTo %>" onchange="applyFilters()">
+        </div>
+        <div class="divider"></div>
         <button type="button" class="btn btn-success" onclick="downloadPdf()">PDF exportieren</button>
     </div>
 
@@ -151,9 +160,13 @@ function buildParams() {
     const user = document.getElementById('user').value;
     const year = document.getElementById('year').value;
     const month = document.getElementById('month').value;
+    const from = document.getElementById('from').value;
+    const to = document.getElementById('to').value;
     if (user) p.set('user', user);
     if (year && month) p.set('month', year + '-' + month);
     else if (year) p.set('year', year);
+    if (from) p.set('from', from);
+    if (to) p.set('to', to);
     return p;
 }
 function applyFilters() { window.location.href = '/?' + buildParams().toString(); }
