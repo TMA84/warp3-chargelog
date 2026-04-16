@@ -49,6 +49,32 @@ jobs:
             ${{ env.REGISTRY }}/tma84/warp3-chargelog-${{ matrix.arch }}:${{ steps.version.outputs.version }}
             ${{ env.REGISTRY }}/tma84/warp3-chargelog-${{ matrix.arch }}:latest
 
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: v${{ steps.version.outputs.version }}
+          generate_release_notes: true
+          body: |
+            ## Docker Images
+
+            | Arch | Image |
+            |------|-------|
+            | amd64 | `ghcr.io/tma84/warp3-chargelog-amd64:${{ steps.version.outputs.version }}` |
+            | aarch64 | `ghcr.io/tma84/warp3-chargelog-aarch64:${{ steps.version.outputs.version }}` |
+            | armv7 | `ghcr.io/tma84/warp3-chargelog-armv7:${{ steps.version.outputs.version }}` |
+
   update-config:
     needs: build
     runs-on: ubuntu-latest
