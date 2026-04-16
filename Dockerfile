@@ -1,5 +1,4 @@
-ARG BUILD_FROM=ghcr.io/hassio-addons/base:16.3.2
-FROM ${BUILD_FROM}
+FROM alpine:3.20
 
 RUN apk add --no-cache nodejs npm
 
@@ -8,6 +7,7 @@ RUN cd /app && npm ci --production
 COPY server.js simplepdf.js warp_logo.png /app/
 COPY views/ /app/views/
 
-COPY rootfs /
+COPY entrypoint.sh /
+RUN chmod a+x /entrypoint.sh
 
-WORKDIR /
+ENTRYPOINT ["/entrypoint.sh"]
