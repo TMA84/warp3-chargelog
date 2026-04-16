@@ -17,3 +17,4 @@ ports_description:
 map:
   - addon_config:rw
 image: ghcr.io/tma84/warp3-chargelog-{arch}
+webui: http://[HOST]:[PORT:8099]
