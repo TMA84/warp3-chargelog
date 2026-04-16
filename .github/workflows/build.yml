@@ -64,7 +64,8 @@ jobs:
         run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
       - name: Update version in config.yaml
-        run: sed -i "s/^version:.*/version: \"${{ steps.version.outputs.version }}\"/" config.yaml
+        run: |
+          sed -i "s/^version:.*/version: \"${{ steps.version.outputs.version }}\"/" config.yaml
 
       - name: Commit and push
         run: |
