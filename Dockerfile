@@ -9,7 +9,5 @@ RUN npm ci --production
 COPY server.js simplepdf.js warp_logo.png ./
 COPY views/ views/
 
-COPY run.sh /etc/s6-overlay/s6-rc.d/warp3/run
-RUN chmod a+x /etc/s6-overlay/s6-rc.d/warp3/run \
-    && echo "longrun" > /etc/s6-overlay/s6-rc.d/warp3/type \
-    && touch /etc/s6-overlay/s6-rc.d/user/contents.d/warp3
+COPY rootfs /
+RUN chmod a+x /etc/s6-overlay/s6-rc.d/warp3/run
