@@ -1,4 +1,6 @@
-#!/usr/bin/with-contenv bashio
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+source /usr/lib/bashio/bashio.sh
 
 CONFIG_PATH=/data/config.yaml
 COMPANY_PATH=/data/company.json
