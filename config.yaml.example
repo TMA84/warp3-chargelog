@@ -1,0 +1,15 @@
+# WARP3 Wallbox Konfiguration
+# Wallboxen werden automatisch per mDNS im Netzwerk gesucht.
+# Optional: Hosts manuell angeben (überspringt dann die Suche)
+# wallboxes:
+#   - host: "warp3-xxxx"
+#   - host: "warp3-yyyy"
+
+# Firmenadresse für PDF-Header (kann auch über die Weboberfläche geändert werden)
+company:
+  name: "Musterfirma GmbH"
+  street: "Musterstraße 1"
+  city: "12345 Musterstadt"
+
+# Webapp
+port: 3000

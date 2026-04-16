@@ -1,0 +1,15 @@
+{
+  "name": "warp3-charge-log",
+  "version": "1.0.0",
+  "description": "Konsolidierte Ladeabrechnung für Tinkerforge WARP3 Wallboxen",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "ejs": "^3.1.10",
+    "js-yaml": "^4.1.0",
+    "bonjour-service": "^1.3.0"
+  }
+}

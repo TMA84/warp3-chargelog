@@ -1,0 +1,5 @@
+node_modules/
+company.json
+config.yaml
+*.pdf
+.DS_Store
